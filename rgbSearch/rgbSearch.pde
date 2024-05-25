@@ -1,10 +1,10 @@
-// rgb search
+// rgb search or gradient search
 // by bug creates
 // create date: may 2024
 // date last modified: may 2024
 
+// variables
 int gameScreen = 0;
-
 int r = 125;
 int g = 125;
 int b = 125;
@@ -15,9 +15,9 @@ int bTarget = floor(int(random(255))/5)*5;
 int last = 0;
 int miliseconds = 0;
 
+// sound variables
 import processing.sound.*;
 Sound s;
-
 SinOsc tri1 = new SinOsc(this);
 SinOsc tri2 = new SinOsc(this);
 SinOsc tri3 = new SinOsc(this);
@@ -33,12 +33,11 @@ void draw() {
     gameScreen();
   } else if (gameScreen == 2) {
     winScreen();
-  } else if (gameScreen == 3) {
-    loseScreen();
-  } else {
+  } else if (gameScreen == 4) {
     quitScreen();
   }
   
+  // adjust freq by center rgb values
   tri1.freq(r+120);
   tri2.freq(g+120);
   tri3.freq(b+120);
@@ -57,7 +56,7 @@ void initScreen() {
     
     textAlign(CENTER);
     fill(0);
-    text("rbg search: a game by bug creates",width*3/4,height*3/4);
+    text("gradient search: a game by bug creates",width*3/4,height*3/4);
 }
 
 void gameScreen() {
@@ -65,6 +64,7 @@ void gameScreen() {
     winGame();
   }
   
+  // gradient logic
   stroke(0);
   if (locked == 'b') {
     for (int ii = 0; ii <= width; ii += 1) {
@@ -89,6 +89,7 @@ void gameScreen() {
     }
   }
   
+  // middle square color logic
   strokeWeight(2);
   if (locked == 'b' && r == rTarget && g == gTarget) {
     stroke(255);
@@ -118,12 +119,15 @@ void gameScreen() {
   } else {
     stroke(0);
   }
+  
   println(r + " " + rTarget);
   println(g + " " + gTarget);
   println(b + " " + bTarget);
+  
   noFill();
   rect(width/2-5,height/2-5,10,10);
   
+  // 'color warp' buttons
   stroke(0);
   strokeWeight(1);
   rectMode(CENTER);
@@ -131,7 +135,9 @@ void gameScreen() {
   button(width-70,height-40,20,20,'g');
   button(width-100,height-40,20,20,'b');
   
+  // target
   strokeWeight(2);
+  stroke(0);
   rectMode(CORNER);
   fill(rTarget, gTarget, bTarget);
   rect(10,10,50,50);
@@ -144,13 +150,11 @@ void winScreen() {
         point(ii,jj);
       }
     }
+    
     textAlign(CENTER);
     fill(0);
     text("you win!",width*3/4,height*3/4);
     text(nfc((miliseconds - last)/1000) + " seconds",width*3/4,height*3/4+30);
-}
-
-void loseScreen() {
 }
 
 void quitScreen() {
@@ -170,6 +174,7 @@ void quitScreen() {
   text("restart",width*2/3,height/2);
 }
 
+// inputs
 public void keyPressed() {
   if (key == 'd' || keyCode == RIGHT) {
     if (locked == 'b' && r < 255) {
@@ -204,34 +209,16 @@ public void keyPressed() {
       b += 5;
     }
   }
+  
   if (keyCode == ESC || key == 'q') {
     quitGame();
   }
+  
   if (keyCode == ENTER || keyCode == RETURN) {
     if (gameScreen == 0 || gameScreen == 2 || gameScreen == 3) {
       startGame();
     }
   }
-}
-
-void button(int x, int y, int w, int h, char c) {
- if (c == 'r') {
-   stroke(0);
-   fill(255,0,0);
- } else if (c == 'g') {
-   stroke(0);
-   fill(0,255,0);
- } else if (c == 'b') {
-   stroke(0);
-   fill(0,0,255);
- }
- rect(x,y,w,h);
- if(mousePressed){
-  if(mouseX > x - 5 && mouseX < x + w + 5 && mouseY > y - 5 && mouseY < y + h + 5){
-    locked = c;
-    print(c);
-  }
- }
 }
 
 public void mouseReleased() {
@@ -244,6 +231,45 @@ public void mouseReleased() {
       startGame();
     }
   }
+}
+
+// functions
+void button(int x, int y, int w, int h, char c) {
+ if (c == 'r') {
+   if (locked == 'r') {
+     strokeWeight(5);
+     stroke(255);
+   } else {
+     strokeWeight(1);
+     stroke(0);
+   }
+   fill(r,0,0);
+ } else if (c == 'g') {
+   if (locked == 'g') {
+     strokeWeight(5);
+     stroke(255);
+   } else {
+     strokeWeight(1);
+     stroke(0);
+   }
+   fill(0,g,0);
+ } else if (c == 'b') {
+   if (locked == 'b') {
+     strokeWeight(5);
+     stroke(255);
+   } else {
+     strokeWeight(1);
+     stroke(0);
+   }
+   fill(0,0,b);
+ }
+ rect(x,y,w,h);
+ if(mousePressed){
+  if(mouseX > x - 5 && mouseX < x + w + 5 && mouseY > y - 5 && mouseY < y + h + 5){
+    locked = c;
+    print(c);
+  }
+ }
 }
 
 void startGame() {
@@ -262,10 +288,6 @@ void startGame() {
 
 void winGame() {
   gameScreen=2;
-}
-
-void loseGame() {
-  gameScreen=3;
 }
 
 void quitGame() {
