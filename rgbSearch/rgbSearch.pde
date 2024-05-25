@@ -91,27 +91,27 @@ void gameScreen() {
   if (locked == 'b' && r == rTarget && g == gTarget) {
     stroke(255);
   } else if (locked == 'b' && abs(r - rTarget) < 20 && abs(g - gTarget) < 20) {
-    stroke(120);
-  } else if (locked == 'b' && abs(r - rTarget) < 40 && abs(g - gTarget) < 40) {
-    stroke(80);
-  } else if (locked == 'b' && abs(r - rTarget) < 60 && abs(g - gTarget) < 60) {
-    stroke(40);
+    stroke(150);
+  } else if (locked == 'b' && abs(r - rTarget) < 50 && abs(g - gTarget) < 50) {
+    stroke(100);
+  } else if (locked == 'b' && abs(r - rTarget) < 80 && abs(g - gTarget) < 80) {
+    stroke(50);
   } else if (locked == 'g' && r == rTarget && b == bTarget) {
     stroke(255);
   } else if (locked == 'g' && abs(r - rTarget) < 20 && abs(b - bTarget) < 20) {
-    stroke(120);
-  } else if (locked == 'g' && abs(r - rTarget) < 40 && abs(b - bTarget) < 40) {
-    stroke(80);
-  } else if (locked == 'g' && abs(r - rTarget) < 60 && abs(b - bTarget) < 60) {
-    stroke(40);
+    stroke(150);
+  } else if (locked == 'g' && abs(r - rTarget) < 50 && abs(b - bTarget) < 50) {
+    stroke(100);
+  } else if (locked == 'g' && abs(r - rTarget) < 80 && abs(b - bTarget) < 80) {
+    stroke(50);
   } else if (locked == 'r' && g == gTarget &&  b == bTarget) {
     stroke(255);
   } else if (locked == 'r' && abs(g - gTarget) < 20 && abs(b - bTarget) < 20) {
-    stroke(120);
-  } else if (locked == 'r' && abs(g - gTarget) < 40 && abs(b - bTarget) < 40) {
-    stroke(80);
-  } else if (locked == 'r' && abs(g - gTarget) < 60 && abs(b - bTarget) < 60) {
-    stroke(40);
+    stroke(150);
+  } else if (locked == 'r' && abs(g - gTarget) < 50 && abs(b - bTarget) < 50) {
+    stroke(100);
+  } else if (locked == 'r' && abs(g - gTarget) < 80 && abs(b - bTarget) < 80) {
+    stroke(50);
   } else {
     stroke(0);
   }
@@ -151,6 +151,20 @@ void loseScreen() {
 }
 
 void quitScreen() {
+  for (int ii = 0; ii <= width; ii += 1) {
+      for (int jj = 0; jj <= height; jj += 1) {
+        stroke(r-width/2+ii,g-height/2+jj,b);
+        point(ii,jj);
+      }
+    }
+    
+  stroke(0);
+  line(width/2,0,width/2,height);
+  
+  textAlign(CENTER);
+  fill(0);
+  text("quit",width/3,height/2);
+  text("go back",width*2/3,height/2);
 }
 
 public void keyPressed() {
@@ -186,6 +200,9 @@ public void keyPressed() {
     } else if (locked == 'r' && b <= 255) {
       b += 5;
     }
+  }
+  if (keyCode == ESC || key == 'q') {
+    quitGame();
   }
 }
 
@@ -238,5 +255,12 @@ void quitGame() {
 }
 
 void loadTitle() {
+  r = 125;
+  g = 125;
+  b = 125;
+  locked = 'b';
+  rTarget = floor(int(random(255))/5)*5;
+  gTarget = floor(int(random(255))/5)*5;
+  bTarget = floor(int(random(255))/5)*5;
   gameScreen=0;
 }
