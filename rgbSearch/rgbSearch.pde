@@ -12,13 +12,15 @@ char locked = 'b';
 int rTarget = floor(int(random(255))/5)*5;
 int gTarget = floor(int(random(255))/5)*5;
 int bTarget = floor(int(random(255))/5)*5;
+int last = 0;
+int miliseconds = 0;
 
 import processing.sound.*;
 Sound s;
 
-TriOsc tri1 = new TriOsc(this);
-TriOsc tri2 = new TriOsc(this);
-TriOsc tri3 = new TriOsc(this);
+SinOsc tri1 = new SinOsc(this);
+SinOsc tri2 = new SinOsc(this);
+SinOsc tri3 = new SinOsc(this);
 
 void setup() {
   size(640,360);
@@ -37,12 +39,12 @@ void draw() {
     quitScreen();
   }
   
-  /*tri1.freq(-(abs(r-rTarget)-255));
-  tri2.freq(-(abs(g-gTarget)-255));
-  tri3.freq(-(abs(b-bTarget)-255));
+  tri1.freq(r+120);
+  tri2.freq(g+120);
+  tri3.freq(b+120);
   tri1.play();
   tri2.play();
-  tri3.play();*/
+  tri3.play();
 }
 
 void initScreen() {
@@ -90,6 +92,7 @@ void gameScreen() {
   strokeWeight(2);
   if (locked == 'b' && r == rTarget && g == gTarget) {
     stroke(255);
+    miliseconds = millis();
   } else if (locked == 'b' && abs(r - rTarget) < 20 && abs(g - gTarget) < 20) {
     stroke(150);
   } else if (locked == 'b' && abs(r - rTarget) < 50 && abs(g - gTarget) < 50) {
@@ -141,10 +144,10 @@ void winScreen() {
         point(ii,jj);
       }
     }
-    
     textAlign(CENTER);
     fill(0);
     text("you win!",width*3/4,height*3/4);
+    text(nfc((miliseconds - last)/1000) + " seconds",width*3/4,height*3/4+30);
 }
 
 void loseScreen() {
@@ -164,45 +167,50 @@ void quitScreen() {
   textAlign(CENTER);
   fill(0);
   text("quit",width/3,height/2);
-  text("go back",width*2/3,height/2);
+  text("restart",width*2/3,height/2);
 }
 
 public void keyPressed() {
   if (key == 'd' || keyCode == RIGHT) {
-    if (locked == 'b' && r <= 255) {
+    if (locked == 'b' && r < 255) {
       r += 5;
-    } else if (locked == 'g' && b <= 255) {
+    } else if (locked == 'g' && b < 255) {
       b += 5;
-    } else if (locked == 'r' && g <= 255) {
+    } else if (locked == 'r' && g < 255) {
       g += 5;
     }
   } else if (key == 'a' || keyCode == LEFT) {
-    if (locked == 'b' && r >= 0) {
+    if (locked == 'b' && r > 0) {
       r -= 5;
-    } else if (locked == 'g' && b >= 0) {
+    } else if (locked == 'g' && b > 0) {
       b -= 5;
-    } else if (locked == 'r' && g >= 0) {
+    } else if (locked == 'r' && g > 0) {
       g -= 5;
     }
   } else if (key == 'a' || keyCode == UP) {
-    if (locked == 'b' && g >= 0) {
+    if (locked == 'b' && g > 0) {
       g -= 5;
-    } else if (locked == 'g' && r >= 0) {
+    } else if (locked == 'g' && r > 0) {
       r -= 5;
-    } else if (locked == 'r' && b >= 0) {
+    } else if (locked == 'r' && b > 0) {
       b -= 5;
     }
   } else if (key == 's' || keyCode == DOWN) {
-    if (locked == 'b' && g <= 255) {
+    if (locked == 'b' && g < 255) {
       g += 5;
-    } else if (locked == 'g' && r <= 255) {
+    } else if (locked == 'g' && r < 255) {
       r += 5;
-    } else if (locked == 'r' && b <= 255) {
+    } else if (locked == 'r' && b < 255) {
       b += 5;
     }
   }
   if (keyCode == ESC || key == 'q') {
     quitGame();
+  }
+  if (keyCode == ENTER || keyCode == RETURN) {
+    if (gameScreen == 0 || gameScreen == 2 || gameScreen == 3) {
+      startGame();
+    }
   }
 }
 
@@ -233,12 +241,22 @@ public void mouseReleased() {
     if (mouseX < width/2) {
       exit();
     } else {
-      loadTitle();
+      startGame();
     }
   }
 }
 
 void startGame() {
+  r = 125;
+  g = 125;
+  b = 125;
+  locked = 'b';
+  rTarget = floor(int(random(255))/5)*5;
+  gTarget = floor(int(random(255))/5)*5;
+  bTarget = floor(int(random(255))/5)*5;
+  
+  last = millis();
+  
   gameScreen=1;
 }
 
@@ -255,12 +273,5 @@ void quitGame() {
 }
 
 void loadTitle() {
-  r = 125;
-  g = 125;
-  b = 125;
-  locked = 'b';
-  rTarget = floor(int(random(255))/5)*5;
-  gTarget = floor(int(random(255))/5)*5;
-  bTarget = floor(int(random(255))/5)*5;
   gameScreen=0;
 }

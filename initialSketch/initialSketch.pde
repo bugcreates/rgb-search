@@ -14,19 +14,6 @@ void setup() {
   size(640,360);
 }
 
-/*void draw() {
-  if (locked == 'b') {
-    for (int ii = x*4-width/2; ii <= x*4+width/2; ii += 1) {
-      for (int jj = y*4-height/2; jj <= y*4+height/2; jj += 1) {
-        stroke(ii,jj,100);
-        point(xpoint, ypoint);
-        ypoint += 1;
-      }
-      xpoint += 1;
-    }
-  }
-}*/
-
 void draw() {
   stroke(0);
   fill(0);
@@ -53,6 +40,10 @@ void draw() {
       }
     }
   }
+  rectMode(CENTER);
+  button(width-40,height-40,20,20,'r');
+  button(width-70,height-40,20,20,'g');
+  button(width-100,height-40,20,20,'b');
 }
 
 public void keyPressed() {
@@ -89,6 +80,26 @@ public void keyPressed() {
       b += 5;
     }
   }
+}
+
+void button(int x, int y, int w, int h, char c) {
+ if (c == 'r') {
+   stroke(0);
+   fill(255,0,0);
+ } else if (c == 'g') {
+   stroke(0);
+   fill(0,255,0);
+ } else if (c == 'b') {
+   stroke(0);
+   fill(0,0,255);
+ }
+ rect(x,y,w,h);
+ if(mousePressed){
+  if(mouseX > x - 5 && mouseX < x + w + 5 && mouseY > y - 5 && mouseY < y + h + 5){
+    locked = c;
+    print(c);
+  }
+ }
 }
 
 /*void gameScreen() {
